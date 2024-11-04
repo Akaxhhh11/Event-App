@@ -24,7 +24,7 @@ class WelcomePage extends StatelessWidget {
               SizedBox(height: 20),
               // Logo Image
               Image.asset(
-                'assets/event.png', // Path to your image asset
+                'parva.png', // Path to your image asset
                 height: 350, // Adjust size as needed
                 width: 350,
               ),
@@ -39,9 +39,10 @@ class WelcomePage extends StatelessWidget {
               ElevatedButton(
                 onPressed: () {
                   // Log In button functionality
+                  Navigator.pushNamed(context, '/login');
                 },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.black, // Background color
+                  backgroundColor: Colors.blueAccent, // Background color
                   minimumSize: Size(double.infinity, 50), // Full width button
                 ),
                 child: Text(
@@ -60,7 +61,7 @@ class WelcomePage extends StatelessWidget {
                 },
                 style: OutlinedButton.styleFrom(
                   minimumSize: Size(double.infinity, 50), // Full width button
-                  side: BorderSide(color: Colors.black), // Border color
+                  side: BorderSide(color: Colors.blueAccent), // Border color
                 ),
                 child: Text(
                   'Sign Up',
