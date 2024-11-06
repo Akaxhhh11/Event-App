@@ -32,11 +32,21 @@ class WelcomePage extends StatelessWidget {
               // Subtext
               Text(
                 'Login or sign Up for more features',
-                style: TextStyle(fontSize: 16, color: Colors.black),
+                style: TextStyle(
+                  fontSize: 16,
+                  color: Colors.black,
+                ),
               ),
               SizedBox(height: 30),
               // Log In Button
               ElevatedButton(
+                child: Text(
+                  'Log In',
+                  style: TextStyle(
+                    fontSize: 18,
+                    color: Colors.white,
+                  ),
+                ),
                 onPressed: () {
                   // Log In button functionality
                   Navigator.pushNamed(context, '/login');
@@ -45,19 +55,12 @@ class WelcomePage extends StatelessWidget {
                   backgroundColor: Colors.blueAccent, // Background color
                   minimumSize: Size(double.infinity, 50), // Full width button
                 ),
-                child: Text(
-                  'Log In',
-                  style: TextStyle(
-                    fontSize: 18,
-                    color: Colors.white,
-                  ),
-                ),
               ),
               SizedBox(height: 10),
               // Sign Up Button
               OutlinedButton(
                 onPressed: () {
-                  // Sign Up button functionality
+                  Navigator.pushNamed(context, '/signup');
                 },
                 style: OutlinedButton.styleFrom(
                   minimumSize: Size(double.infinity, 50), // Full width button
