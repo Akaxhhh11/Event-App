@@ -30,7 +30,7 @@ class LoginPage extends StatelessWidget {
                 SizedBox(height: 0), // Spacing at the top
                 // Image Banner at the Top
                 Image.asset(
-                  'parva.png', // Path to your image asset
+                  'reva_logo.png', // Path to your image asset
                   height: 300, // Adjust the size as needed
                   width: 300,
                 ),
@@ -161,6 +161,7 @@ class LoginPage extends StatelessWidget {
                     GestureDetector(
                       onTap: () {
                         // Sign Up navigation action
+                        Navigator.pushNamed(context, '/signup');
                       },
                       child: Text(
                         "Sign Up",

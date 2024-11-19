@@ -24,7 +24,7 @@ class WelcomePage extends StatelessWidget {
               SizedBox(height: 20),
               // Logo Image
               Image.asset(
-                'parva.png', // Path to your image asset
+                'reva_logo.png', // Path to your image asset
                 height: 350, // Adjust size as needed
                 width: 350,
               ),

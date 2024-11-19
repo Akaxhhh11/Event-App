@@ -144,13 +144,14 @@ class _SignupPageState extends State<SignupPage> {
                     child: ElevatedButton(
                       onPressed: agreeToTerms
                           ? () {
-                              // Handle Sign Up
+                              Navigator.pushNamed(context, '/homepage');
                             }
                           : null,
                       child: Text("Sign Up", style: const TextStyle()),
                       style: ElevatedButton.styleFrom(
                         padding: EdgeInsets.symmetric(vertical: 16),
-                        backgroundColor: Colors.blue,
+                        backgroundColor:
+                            const Color.fromARGB(255, 87, 118, 143),
                         // Button color
                       ),
                     ),
