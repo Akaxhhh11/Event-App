@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
@@ -8,6 +9,60 @@ class SignupPage extends StatefulWidget {
 
 class _SignupPageState extends State<SignupPage> {
   bool agreeToTerms = false;
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
+  final _confirmPasswordController = TextEditingController();
+  final _nameController = TextEditingController();
+  final _lastNameController = TextEditingController();
+
+  // Firebase authentication instance
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+
+  // Function to handle sign-up logic
+  Future<void> _signUp() async {
+    String email = _emailController.text.trim();
+    String password = _passwordController.text.trim();
+    String confirmPassword = _confirmPasswordController.text.trim();
+
+    if (password != confirmPassword) {
+      // Password and Confirm Password do not match
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text("Passwords do not match!"),
+        backgroundColor: Colors.red,
+      ));
+      return;
+    }
+
+    try {
+      // Create user with email and password
+      final credential = await _auth.createUserWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+      // You can navigate to the homepage or any other page after successful signup
+      Navigator.pushNamed(context, '/login');
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'weak-password') {
+        print('The password provided is too weak.');
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text("The password provided is too weak."),
+          backgroundColor: Colors.red,
+        ));
+      } else if (e.code == 'email-already-in-use') {
+        print('The account already exists for that email.');
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text("The account already exists for that email."),
+          backgroundColor: Colors.red,
+        ));
+      }
+    } catch (e) {
+      print(e);
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text("An error occurred. Please try again."),
+        backgroundColor: Colors.red,
+      ));
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -16,7 +71,6 @@ class _SignupPageState extends State<SignupPage> {
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 0, // Make AppBar blend with background
-        // title: Text('Login Page', style: TextStyle(color: Colors.black)),
         leading: IconButton(
           icon: Icon(
             Icons.arrow_back,
@@ -36,8 +90,8 @@ class _SignupPageState extends State<SignupPage> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const Text(
-                  "Wellcome!",
-                  style: const TextStyle(
+                  "Welcome!",
+                  style: TextStyle(
                     fontSize: 30,
                     fontWeight: FontWeight.bold,
                   ),
@@ -45,13 +99,14 @@ class _SignupPageState extends State<SignupPage> {
                 const SizedBox(height: 8),
                 const Text(
                   "Enter your details",
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 18,
                     color: Colors.black54,
                   ),
                 ),
                 const SizedBox(height: 20),
                 TextFormField(
+                  controller: _nameController,
                   decoration: const InputDecoration(
                       labelText: "Enter your name",
                       border: OutlineInputBorder(),
@@ -59,35 +114,39 @@ class _SignupPageState extends State<SignupPage> {
                 ),
                 const SizedBox(height: 12),
                 TextFormField(
+                  controller: _lastNameController,
                   decoration: const InputDecoration(
                       labelText: "Last name",
                       border: OutlineInputBorder(),
                       labelStyle: TextStyle()),
                 ),
-                SizedBox(height: 12),
+                const SizedBox(height: 12),
                 TextFormField(
-                  decoration: InputDecoration(
+                  controller: _emailController,
+                  decoration: const InputDecoration(
                       labelText: "Email/phone number",
                       border: OutlineInputBorder(),
                       labelStyle: TextStyle()),
                 ),
                 const SizedBox(height: 12),
                 TextFormField(
+                  controller: _passwordController,
                   obscureText: true,
                   decoration: const InputDecoration(
                       labelText: "Password",
-                      border: const OutlineInputBorder(),
+                      border: OutlineInputBorder(),
                       labelStyle: TextStyle()),
                 ),
-                SizedBox(height: 12),
+                const SizedBox(height: 12),
                 TextFormField(
+                  controller: _confirmPasswordController,
                   obscureText: true,
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                       labelText: "Confirm password",
                       border: OutlineInputBorder(),
                       labelStyle: TextStyle()),
                 ),
-                SizedBox(height: 20),
+                const SizedBox(height: 20),
                 Row(
                   children: [
                     Checkbox(
@@ -109,7 +168,7 @@ class _SignupPageState extends State<SignupPage> {
                           ),
                           children: [
                             TextSpan(
-                              text: " Terms offf Service",
+                              text: " Terms of Service",
                               style: const TextStyle(
                                 color: Colors.blue,
                                 decoration: TextDecoration.underline,
@@ -137,16 +196,12 @@ class _SignupPageState extends State<SignupPage> {
                     ),
                   ],
                 ),
-                SizedBox(height: 20),
+                const SizedBox(height: 20),
                 Center(
                   child: SizedBox(
                     width: double.infinity,
                     child: ElevatedButton(
-                      onPressed: agreeToTerms
-                          ? () {
-                              Navigator.pushNamed(context, '/homepage');
-                            }
-                          : null,
+                      onPressed: agreeToTerms ? _signUp : null,
                       child: Text("Sign Up", style: const TextStyle()),
                       style: ElevatedButton.styleFrom(
                         padding: EdgeInsets.symmetric(vertical: 16),
