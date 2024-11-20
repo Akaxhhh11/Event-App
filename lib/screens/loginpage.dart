@@ -1,14 +1,61 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-class LoginPage extends StatelessWidget {
+class LogInPage extends StatefulWidget {
+  @override
+  _LogInPageState createState() => _LogInPageState();
+}
+
+class _LogInPageState extends State<LogInPage> {
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
+
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+
+  // Function to handle sign-in logic
+  Future<void> _LogIn() async {
+    String email = _emailController.text.trim();
+    String password = _passwordController.text.trim();
+
+    try {
+      final credential = await _auth.signInWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+      // _showAlertDialog('Success', 'You have logged in successfully');
+      Navigator.pushNamed(context, '/homepage');
+    } on FirebaseAuthException catch (e) {
+      _showAlertDialog('Error.', e.code as String);
+    } catch (e) {
+      print(e);
+      _showAlertDialog('Error', "An error occurred. Please try again.");
+    }
+  }
+
+  // Show alert dialog with a given message
+  void _showAlertDialog(String title, String message) {
+    showDialog<String>(
+      context: context,
+      builder: (BuildContext context) => AlertDialog(
+        title: Text(title),
+        content: Text(message),
+        actions: <Widget>[
+          TextButton(
+            onPressed: () => Navigator.pop(context, 'OK'),
+            child: const Text('OK'),
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white, // Light mint green background color
+      backgroundColor: Colors.white10,
       appBar: AppBar(
         backgroundColor: Colors.white,
-        elevation: 0, // Make AppBar blend with background
-        // title: Text('Login Page', style: TextStyle(color: Colors.black)),
+        elevation: 0,
         leading: IconButton(
           icon: Icon(
             Icons.arrow_back,
@@ -20,160 +67,60 @@ class LoginPage extends StatelessWidget {
           },
         ),
       ),
-      body: Center(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 30.0, vertical: 0),
+      body: Padding(
+        padding: const EdgeInsets.all(20.0),
+        child: Center(
           child: SingleChildScrollView(
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                SizedBox(height: 0), // Spacing at the top
-                // Image Banner at the Top
-                Image.asset(
-                  'reva_logo.png', // Path to your image asset
-                  height: 300, // Adjust the size as needed
-                  width: 300,
-                ),
-                // SizedBox(height: 0),
-                // Text(
-                //   'ENTER YOUR USERNAME AND PASSWORD',
-                //   style: TextStyle(
-                //     fontSize: 18,
-                //     color: Colors.black,
-                //   ),
-                // ),
-                SizedBox(height: 20),
-                // Username TextField
-                TextField(
-                  decoration: InputDecoration(
-                    labelText: 'Username',
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    filled: true,
-                    fillColor: Colors.white,
+                const Text(
+                  "Welcome Back!",
+                  style: TextStyle(
+                    fontSize: 30,
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
-                SizedBox(height: 20),
-                // Password TextField
-                TextField(
+                const SizedBox(height: 8),
+                const Text(
+                  "Please enter your login details",
+                  style: TextStyle(
+                    fontSize: 18,
+                    color: Colors.black54,
+                  ),
+                ),
+                const SizedBox(height: 20),
+                TextFormField(
+                  controller: _emailController,
+                  decoration: const InputDecoration(
+                      labelText: "Email/phone number",
+                      border: OutlineInputBorder(),
+                      labelStyle: TextStyle()),
+                ),
+                const SizedBox(height: 12),
+                TextFormField(
+                  controller: _passwordController,
                   obscureText: true,
-                  decoration: InputDecoration(
-                    labelText: 'Password',
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    filled: true,
-                    fillColor: Colors.white,
-                  ),
+                  decoration: const InputDecoration(
+                      labelText: "Password",
+                      border: OutlineInputBorder(),
+                      labelStyle: TextStyle()),
                 ),
-                SizedBox(height: 10),
-                // Remember Me and Forgot Password Row
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Row(
-                      children: [
-                        Checkbox(
-                          value:
-                              false, // Set default value or use a stateful widget
-                          onChanged: (value) {},
-                        ),
-                        Text("Remember Me"),
-                      ],
-                    ),
-                    TextButton(
-                      onPressed: () {
-                        // Forgotten password action
-                      },
-                      child: Text(
-                        'Forgotten password?',
-                        style: TextStyle(
-                          color: Colors.blue,
-                        ),
+                const SizedBox(height: 20),
+                Center(
+                  child: SizedBox(
+                    width: double.infinity,
+                    child: ElevatedButton(
+                      onPressed: _LogIn,
+                      child: Text("Sign In", style: const TextStyle()),
+                      style: ElevatedButton.styleFrom(
+                        padding: EdgeInsets.symmetric(vertical: 16),
+                        backgroundColor:
+                            const Color.fromARGB(255, 87, 118, 143),
                       ),
                     ),
-                  ],
-                ),
-                SizedBox(height: 10),
-                // Log In Button
-                ElevatedButton(
-                  onPressed: () {
-                    // Log In button functionality
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.blue, // Background color
-                    minimumSize: Size(double.infinity, 50), // Full width button
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                  ),
-                  child: Text(
-                    'Log In',
-                    style: TextStyle(
-                      fontSize: 18,
-                      color: Colors.white,
-                    ),
                   ),
                 ),
-                // SizedBox(height: 20),
-                // // OR Divider
-                // Text(
-                //   'OR',
-                //   style: TextStyle(
-                //     fontSize: 16,
-                //     color: Colors.grey[700],
-                //   ),
-                // ),
-                // SizedBox(height: 20),
-                // // Google Login Button
-                // OutlinedButton.icon(
-                //   onPressed: () {
-                //     // Google login functionality
-                //   },
-                //   style: OutlinedButton.styleFrom(
-                //     minimumSize: Size(double.infinity, 50),
-                //     backgroundColor: Colors.white,
-                //     side: BorderSide(color: Colors.grey[300]!),
-                //     shape: RoundedRectangleBorder(
-                //       borderRadius: BorderRadius.circular(10),
-                //     ),
-                //   ),
-                // icon: Image.asset(
-                //   'assets/google_logo.png', // Make sure to add this image to your assets
-                //   height: 24,
-                //   width: 24,
-                // ),
-                // label: Text(
-                //   'Log in with your Google account',
-                //   style: TextStyle(
-                //     fontSize: 16,
-                //     color: Colors.black87,
-                //   ),
-                // ),
-                //),
-                SizedBox(height: 20),
-                // Sign Up Option
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text("Don’t have an account? "),
-                    GestureDetector(
-                      onTap: () {
-                        // Sign Up navigation action
-                        Navigator.pushNamed(context, '/signup');
-                      },
-                      child: Text(
-                        "Sign Up",
-                        style: TextStyle(
-                          color: Colors.blue,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                SizedBox(height: 50), // Spacing at the bottom
               ],
             ),
           ),

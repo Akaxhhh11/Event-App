@@ -42,26 +42,27 @@ class _SignupPageState extends State<SignupPage> {
       // You can navigate to the homepage or any other page after successful signup
       Navigator.pushNamed(context, '/login');
     } on FirebaseAuthException catch (e) {
-      if (e.code == 'weak-password') {
-        print('The password provided is too weak.');
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: Text("The password provided is too weak."),
-          backgroundColor: Colors.red,
-        ));
-      } else if (e.code == 'email-already-in-use') {
-        print('The account already exists for that email.');
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: Text("The account already exists for that email."),
-          backgroundColor: Colors.red,
-        ));
-      }
+      _showAlertDialog('Error.', e.code as String);
     } catch (e) {
-      print(e);
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text("An error occurred. Please try again."),
-        backgroundColor: Colors.red,
-      ));
+      _showAlertDialog('Error', "An error occurred. Please try again.");
     }
+  }
+
+  // Show alert dialog with a given message
+  void _showAlertDialog(String title, String message) {
+    showDialog<String>(
+      context: context,
+      builder: (BuildContext context) => AlertDialog(
+        title: Text(title),
+        content: Text(message),
+        actions: <Widget>[
+          TextButton(
+            onPressed: () => Navigator.pop(context, 'OK'),
+            child: const Text('OK'),
+          ),
+        ],
+      ),
+    );
   }
 
   @override

@@ -1,6 +1,6 @@
+import 'package:event_manage/screens/homepage.dart';
 import 'package:event_manage/screens/loginpage.dart';
 import 'package:event_manage/screens/signup.dart';
-import 'package:event_manage/screens/testpage.dart';
 import 'package:event_manage/screens/welcome.dart';
 
 import 'package:flutter/material.dart';
@@ -22,7 +22,7 @@ class EventManagementApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       routes: {
         '/': (context) => WelcomePage(),
-        '/login': (context) => LoginPage(),
+        '/login': (context) => LogInPage(),
         '/signup': (context) => SignupPage(),
         '/homepage': (context) => HomePage(),
       },
