@@ -3,6 +3,4 @@
 # Contributors
 
 - Akash
-- Tejasvi Javagal
-- Tanishka
 - Meghana
